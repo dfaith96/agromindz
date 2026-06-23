@@ -1,0 +1,1085 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Agromindz | AI Advisor for Farmers</title>
+  <style>
+    :root {
+      --ink: #1d2a1f;
+      --muted: #607067;
+      --line: #dbe5d6;
+      --paper: #f6f8f2;
+      --white: #ffffff;
+      --green: #247a3d;
+      --leaf: #4f9b35;
+      --gold: #c1841a;
+      --soil: #6b4d2e;
+      --sky: #1d74c4;
+      --shadow: 0 18px 45px rgba(29, 42, 31, 0.13);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--paper);
+      font-family: Inter, Segoe UI, Arial, sans-serif;
+      line-height: 1.55;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    .wrap {
+      width: min(1140px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      background: #1d2a1f;
+      color: #e6f3df;
+      font-size: 0.9rem;
+    }
+
+    .topbar .wrap {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 8px 0;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: rgba(255, 255, 255, 0.94);
+      border-bottom: 1px solid rgba(219, 229, 214, 0.9);
+      backdrop-filter: blur(14px);
+    }
+
+    .nav {
+      min-height: 74px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 900;
+      font-size: 1.16rem;
+    }
+
+    .logo {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      color: white;
+      background: linear-gradient(135deg, var(--green), var(--leaf));
+      border-radius: 8px;
+      font-weight: 900;
+    }
+
+    .brand small {
+      display: block;
+      color: var(--muted);
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+      color: #344334;
+      font-size: 0.94rem;
+      font-weight: 800;
+    }
+
+    .btn {
+      min-height: 42px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid transparent;
+      border-radius: 8px;
+      padding: 11px 16px;
+      font-weight: 900;
+      cursor: pointer;
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      color: white;
+      background: var(--green);
+      box-shadow: 0 10px 22px rgba(36, 122, 61, 0.24);
+    }
+
+    .btn-secondary {
+      color: var(--ink);
+      background: white;
+      border-color: var(--line);
+    }
+
+    .hero {
+      color: white;
+      background:
+        linear-gradient(90deg, rgba(19, 42, 25, 0.94), rgba(19, 42, 25, 0.65) 52%, rgba(19, 42, 25, 0.18)),
+        url("https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1800&q=80") center/cover;
+    }
+
+    .hero .wrap {
+      min-height: calc(100vh - 112px);
+      display: grid;
+      grid-template-columns: minmax(0, 1.08fr) minmax(310px, 0.92fr);
+      gap: 38px;
+      align-items: center;
+      padding: 72px 0;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      color: #c9f5c1;
+      font-size: 0.82rem;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 15px;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      overflow-wrap: anywhere;
+    }
+
+    h1 {
+      margin: 0;
+      max-width: 790px;
+      font-size: clamp(2.6rem, 7vw, 5.8rem);
+      line-height: 0.95;
+      letter-spacing: 0;
+    }
+
+    .hero p {
+      max-width: 650px;
+      color: #eef8e8;
+      margin: 22px 0 28px;
+      font-size: clamp(1rem, 1.6vw, 1.2rem);
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .farm-panel {
+      background: rgba(255, 255, 255, 0.96);
+      color: var(--ink);
+      border-radius: 8px;
+      padding: 22px;
+      box-shadow: var(--shadow);
+    }
+
+    .farm-panel h2 {
+      margin: 0 0 14px;
+      font-size: 1.22rem;
+    }
+
+    .farm-illustration {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 8px;
+      background: #ecf8df;
+      border: 1px solid var(--line);
+      margin-bottom: 14px;
+    }
+
+    .signal-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .signal {
+      display: grid;
+      grid-template-columns: 38px 1fr;
+      gap: 12px;
+      align-items: start;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fbfff8;
+    }
+
+    .signal-icon {
+      width: 36px;
+      height: 36px;
+      display: grid;
+      place-items: center;
+      color: white;
+      background: var(--green);
+      border-radius: 8px;
+      font-weight: 900;
+    }
+
+    .signal strong {
+      display: block;
+      font-size: 0.92rem;
+    }
+
+    .signal span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+
+    .badge {
+      display: inline-flex;
+      margin-top: 7px;
+      border-radius: 999px;
+      padding: 6px 9px;
+      font-size: 0.76rem;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .badge.good {
+      color: #14532d;
+      background: #dcfce7;
+    }
+
+    .badge.warn {
+      color: #744210;
+      background: #fef3c7;
+    }
+
+    .badge.risk {
+      color: #7f1d1d;
+      background: #fde2e2;
+    }
+
+    section {
+      padding: 76px 0;
+    }
+
+    .section-head {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 28px;
+      margin-bottom: 28px;
+    }
+
+    .section-head h2 {
+      margin: 0;
+      font-size: clamp(2rem, 4vw, 3.1rem);
+      line-height: 1.05;
+    }
+
+    .section-head p {
+      max-width: 540px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 1.02rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .card {
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 24px;
+      box-shadow: 0 8px 24px rgba(29, 42, 31, 0.07);
+    }
+
+    .card-icon {
+      width: 43px;
+      height: 43px;
+      display: grid;
+      place-items: center;
+      border-radius: 8px;
+      color: white;
+      background: var(--green);
+      font-weight: 900;
+      margin-bottom: 18px;
+    }
+
+    .card h3 {
+      margin: 0 0 9px;
+      font-size: 1.18rem;
+    }
+
+    .card p,
+    .card li {
+      color: var(--muted);
+    }
+
+    .card ul {
+      padding-left: 18px;
+      margin: 14px 0 0;
+    }
+
+    .advisor {
+      background: #1d2a1f;
+      color: white;
+    }
+
+    .advisor-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+      gap: 30px;
+      align-items: start;
+    }
+
+    .advisor h2 {
+      margin: 0 0 16px;
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      line-height: 1.05;
+    }
+
+    .advisor p {
+      color: #dcebd7;
+    }
+
+    .toolbox {
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 8px;
+      padding: 22px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+    }
+
+    label {
+      display: grid;
+      gap: 7px;
+      color: #eef8e8;
+      font-weight: 800;
+      font-size: 0.92rem;
+    }
+
+    input,
+    select {
+      width: 100%;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 8px;
+      padding: 11px 12px;
+      color: var(--ink);
+      background: white;
+    }
+
+    .result {
+      margin-top: 16px;
+      padding: 18px;
+      border-radius: 8px;
+      background: #eef8e8;
+      color: var(--ink);
+    }
+
+    .result strong {
+      display: block;
+      font-size: 1.55rem;
+      color: var(--green);
+      line-height: 1.1;
+      margin-bottom: 6px;
+    }
+
+    .disease-panel {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 22px;
+    }
+
+    .scan-box {
+      min-height: 430px;
+      position: relative;
+      overflow: hidden;
+      border-radius: 8px;
+      background:
+        linear-gradient(0deg, rgba(29, 42, 31, 0.36), rgba(29, 42, 31, 0.06)),
+        url("https://images.unsplash.com/photo-1515150144380-bca9f1650ed9?auto=format&fit=crop&w=1200&q=80") center/cover;
+      box-shadow: var(--shadow);
+    }
+
+    .scan-box::after {
+      content: "Leaf scan ready";
+      position: absolute;
+      left: 22px;
+      bottom: 22px;
+      color: white;
+      background: rgba(29, 42, 31, 0.9);
+      border-radius: 8px;
+      padding: 12px 15px;
+      font-weight: 900;
+    }
+
+    .disease-list {
+      display: grid;
+      gap: 14px;
+    }
+
+    .disease-item {
+      display: grid;
+      grid-template-columns: 46px 1fr;
+      gap: 14px;
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 18px;
+    }
+
+    .disease-item b {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      color: white;
+      background: var(--gold);
+      border-radius: 8px;
+    }
+
+    .disease-item h3 {
+      margin: 0 0 4px;
+    }
+
+    .disease-item p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .metric {
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 20px;
+    }
+
+    .metric strong {
+      display: block;
+      color: var(--green);
+      font-size: 1.7rem;
+      line-height: 1;
+      margin-bottom: 7px;
+    }
+
+    .metric span {
+      color: var(--muted);
+      font-weight: 800;
+    }
+
+    .cta {
+      background: white;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .cta-box {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      padding: 30px;
+      border: 1px solid #cde5c8;
+      border-radius: 8px;
+      background: #edf8e8;
+    }
+
+    .cta-box h2 {
+      margin: 0 0 6px;
+      font-size: clamp(1.8rem, 3vw, 2.55rem);
+    }
+
+    .cta-box p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    footer {
+      background: #1d2a1f;
+      color: #dcebd7;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.2fr repeat(3, 1fr);
+      gap: 26px;
+      padding: 44px 0;
+    }
+
+    footer h3,
+    footer h4 {
+      margin: 0 0 12px;
+      color: white;
+    }
+
+    footer p,
+    footer a,
+    footer span {
+      color: #bfd2ba;
+    }
+
+    .footer-links {
+      display: grid;
+      gap: 8px;
+    }
+
+    .copyright {
+      grid-column: 1 / -1;
+      border-top: 1px solid rgba(255, 255, 255, 0.14);
+      padding-top: 18px;
+      color: #bfd2ba;
+    }
+
+    @media (max-width: 920px) {
+      nav {
+        display: none;
+      }
+
+      .hero .wrap,
+      .advisor-layout,
+      .disease-panel,
+      .footer-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .section-head,
+      .cta-box {
+        align-items: start;
+        flex-direction: column;
+      }
+
+      .grid,
+      .metrics {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 620px) {
+      .topbar .wrap {
+        flex-direction: column;
+        gap: 4px;
+      }
+
+      .nav {
+        min-height: 66px;
+      }
+
+      .hero .wrap {
+        min-height: auto;
+        padding: 58px 0;
+      }
+
+      section {
+        padding: 54px 0;
+      }
+
+      .grid,
+      .metrics,
+      .signal-grid,
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .signal {
+        grid-template-columns: 38px 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="wrap">
+      <span>AI advisor for farmers, crop disease detection, and yield forecasting</span>
+      <span>Smarter decisions from soil to harvest</span>
+    </div>
+  </div>
+
+  <header>
+    <div class="wrap nav">
+      <a class="brand" href="#">
+        <span class="logo">AM</span>
+        <span>Agromindz<small>Farm intelligence advisor</small></span>
+      </a>
+      <nav aria-label="Main navigation">
+        <a href="#advisor">Advisor</a>
+        <a href="#disease">Disease Detection</a>
+        <a href="#forecast">Yield Forecast</a>
+        <a href="#services">Services</a>
+      </nav>
+      <div>
+        <a class="btn btn-secondary" href="#forecast">Forecast</a>
+        <a class="btn btn-primary" href="#contact">Get Started</a>
+      </div>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="wrap">
+      <div>
+        <span class="eyebrow">Agromindz AI Farming Support</span>
+        <h1>AI guidance for healthier crops and better harvest planning.</h1>
+        <p>Agromindz helps farmers make timely decisions with field advice, crop disease detection, weather-aware recommendations, and yield forecasting from planting to harvest.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#advisor">Use Farm Advisor</a>
+          <a class="btn btn-secondary" href="#disease">Check Crop Health</a>
+        </div>
+      </div>
+      <aside class="farm-panel" aria-label="Farm intelligence preview">
+        <h2>Today’s Farm Signals</h2>
+        <svg class="farm-illustration" viewBox="0 0 560 330" role="img" aria-label="Illustrated farm dashboard with fields, crop health, irrigation, disease alert, and yield forecast">
+          <defs>
+            <linearGradient id="skyGrad" x1="0" x2="0" y1="0" y2="1">
+              <stop offset="0%" stop-color="#bfe7ff" />
+              <stop offset="100%" stop-color="#eaf7df" />
+            </linearGradient>
+            <linearGradient id="fieldGrad" x1="0" x2="1" y1="0" y2="1">
+              <stop offset="0%" stop-color="#72b84c" />
+              <stop offset="100%" stop-color="#276f38" />
+            </linearGradient>
+            <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
+              <feDropShadow dx="0" dy="8" stdDeviation="7" flood-color="#1d2a1f" flood-opacity="0.22" />
+            </filter>
+          </defs>
+          <rect width="560" height="330" rx="18" fill="url(#skyGrad)" />
+          <circle cx="472" cy="58" r="34" fill="#f7c948" />
+          <path d="M0 126 C80 88 160 118 235 92 C320 62 420 86 560 48 L560 170 L0 170 Z" fill="#d7ebc2" />
+          <path d="M0 168 L560 168 L560 330 L0 330 Z" fill="#8ac460" />
+          <path d="M34 310 C95 256 112 210 156 169 L250 169 C226 212 207 255 195 330 L18 330 Z" fill="url(#fieldGrad)" />
+          <path d="M209 330 C219 266 246 211 282 169 L390 169 C365 219 343 273 337 330 Z" fill="#6aa84f" />
+          <path d="M356 330 C371 266 404 212 446 169 L560 169 L560 330 Z" fill="#4c8d3f" />
+          <g stroke="#eaf7df" stroke-width="5" opacity="0.55">
+            <path d="M58 318 C103 262 125 211 164 174" />
+            <path d="M100 322 C132 265 151 214 184 174" />
+            <path d="M240 326 C251 266 270 212 302 174" />
+            <path d="M286 326 C294 266 318 213 350 174" />
+            <path d="M398 326 C416 265 446 213 492 174" />
+            <path d="M448 326 C468 270 500 218 542 179" />
+          </g>
+          <g filter="url(#softShadow)">
+            <rect x="28" y="26" width="162" height="74" rx="14" fill="#ffffff" />
+            <circle cx="63" cy="63" r="22" fill="#fef3c7" />
+            <path d="M63 47 C74 58 75 72 63 82 C51 72 52 58 63 47 Z" fill="#247a3d" />
+            <text x="96" y="56" fill="#1d2a1f" font-size="17" font-weight="800">Maize Field A</text>
+            <text x="96" y="78" fill="#744210" font-size="13" font-weight="700">Irrigate today</text>
+          </g>
+          <g filter="url(#softShadow)">
+            <rect x="354" y="78" width="178" height="82" rx="14" fill="#ffffff" />
+            <path d="M383 132 C392 107 411 98 426 90 C433 111 424 133 399 142 Z" fill="#4f9b35" />
+            <path d="M392 137 C410 119 421 105 430 90" stroke="#247a3d" stroke-width="4" fill="none" />
+            <circle cx="442" cy="99" r="7" fill="#b93838" />
+            <text x="462" y="107" fill="#1d2a1f" font-size="16" font-weight="800">Tomato Bed</text>
+            <text x="462" y="129" fill="#7f1d1d" font-size="13" font-weight="700">Inspect leaf spot</text>
+          </g>
+          <g filter="url(#softShadow)">
+            <rect x="215" y="38" width="124" height="68" rx="14" fill="#ffffff" />
+            <path d="M242 78 C252 63 264 63 274 78 C285 60 298 61 309 78" stroke="#1d74c4" stroke-width="6" fill="none" stroke-linecap="round" />
+            <text x="240" y="58" fill="#1d2a1f" font-size="15" font-weight="800">Rice Plot 2</text>
+            <text x="240" y="92" fill="#14532d" font-size="13" font-weight="800">Healthy</text>
+          </g>
+          <g filter="url(#softShadow)">
+            <rect x="302" y="212" width="210" height="80" rx="14" fill="#ffffff" />
+            <path d="M328 266 L362 246 L394 254 L430 226 L486 232" stroke="#247a3d" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+            <circle cx="430" cy="226" r="7" fill="#247a3d" />
+            <text x="328" y="235" fill="#1d2a1f" font-size="17" font-weight="800">Yield Outlook</text>
+            <text x="328" y="282" fill="#14532d" font-size="15" font-weight="900">+8% with fertilizer timing</text>
+          </g>
+        </svg>
+        <div class="signal-grid">
+          <div class="signal">
+            <div class="signal-icon">M</div>
+            <div><strong>Maize Field A</strong><span>Moisture dropping below target</span><span class="badge warn">Irrigate</span></div>
+          </div>
+          <div class="signal">
+            <div class="signal-icon" style="background: var(--leaf);">R</div>
+            <div><strong>Rice Plot 2</strong><span>Canopy growth is on schedule</span><span class="badge good">Healthy</span></div>
+          </div>
+          <div class="signal">
+            <div class="signal-icon" style="background: var(--gold);">T</div>
+            <div><strong>Tomato Bed</strong><span>Leaf spot risk increasing</span><span class="badge risk">Inspect</span></div>
+          </div>
+          <div class="signal">
+            <div class="signal-icon" style="background: var(--sky);">Y</div>
+            <div><strong>Yield Outlook</strong><span>Forecast improves with fertilizer timing</span><span class="badge good">+8%</span></div>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <main>
+    <section id="services">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <span class="eyebrow" style="color: var(--green);">Product and Service Features</span>
+            <h2>Everything farmers need for smarter field decisions.</h2>
+          </div>
+          <p>Agromindz combines practical advisory tools with AI-powered detection and forecasting services that are easy to use in the field.</p>
+        </div>
+
+        <div class="grid">
+          <article class="card">
+            <div class="card-icon">A</div>
+            <h3>AI Farm Advisor</h3>
+            <p>The AI Farm Advisor gives farmers practical daily guidance based on crop type, growth stage, soil condition, weather pressure, and visible field problems.</p>
+            <ul>
+              <li>Suggests when to irrigate, fertilize, weed, spray, or inspect.</li>
+              <li>Explains recommendations in simple farmer-friendly language.</li>
+              <li>Helps reduce guesswork during planting, growth, and harvest periods.</li>
+            </ul>
+          </article>
+          <article class="card">
+            <div class="card-icon" style="background: var(--gold);">D</div>
+            <h3>Crop Disease Detection</h3>
+            <p>Crop Disease Detection helps farmers identify plant health problems earlier by reviewing symptoms from leaf photos and field observations.</p>
+            <ul>
+              <li>Checks for leaf spots, yellowing, wilting, blight, mold, and pest damage.</li>
+              <li>Separates likely disease signs from nutrient stress or water stress.</li>
+              <li>Provides next-step actions such as isolate, monitor, treat, or call an expert.</li>
+            </ul>
+          </article>
+          <article class="card">
+            <div class="card-icon" style="background: var(--sky);">Y</div>
+            <h3>Yield Forecasting</h3>
+            <p>Yield Forecasting estimates expected harvest output before the season ends, helping farmers plan sales, storage, transport, and input spending.</p>
+            <ul>
+              <li>Uses field size, crop type, rainfall, crop health, and farm practices.</li>
+              <li>Shows likely yield range instead of a single uncertain number.</li>
+              <li>Highlights actions that can still improve final harvest performance.</li>
+            </ul>
+          </article>
+          <article class="card">
+            <div class="card-icon" style="background: var(--soil);">S</div>
+            <h3>Soil and Nutrient Guidance</h3>
+            <p>Soil and Nutrient Guidance helps farmers understand what their crop may be missing and when nutrients should be applied for better uptake.</p>
+            <ul>
+              <li>Recommends compost, manure, lime, or fertilizer timing based on field condition.</li>
+              <li>Connects yellowing, poor growth, and weak roots to possible nutrient issues.</li>
+              <li>Encourages better soil records for future planting seasons.</li>
+            </ul>
+          </article>
+          <article class="card">
+            <div class="card-icon">W</div>
+            <h3>Weather-Aware Planning</h3>
+            <p>Weather-Aware Planning connects rainfall, heat, humidity, and dry spells to the most important farm decisions each week.</p>
+            <ul>
+              <li>Guides irrigation planning when moisture is dropping.</li>
+              <li>Warns when humid weather may increase disease pressure.</li>
+              <li>Helps farmers choose safer windows for spraying, planting, and harvesting.</li>
+            </ul>
+          </article>
+          <article class="card">
+            <div class="card-icon" style="background: var(--leaf);">R</div>
+            <h3>Farm Record Insights</h3>
+            <p>Farm Record Insights turns everyday farm notes into useful knowledge for improving the next season and managing costs more carefully.</p>
+            <ul>
+              <li>Tracks crop history, planting dates, input use, disease events, and harvest results.</li>
+              <li>Compares what worked across fields and seasons.</li>
+              <li>Helps farmers make better input budgets and production plans.</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="advisor" id="advisor">
+      <div class="wrap advisor-layout">
+        <div>
+          <span class="eyebrow">Interactive Farmer Advisor</span>
+          <h2>Get field guidance based on your crop condition.</h2>
+          <p>Select your crop, growth stage, soil condition, and main concern. Agromindz gives a practical advisory note that can guide the next field action.</p>
+          <p>For serious crop disease, chemical use, or food safety decisions, farmers should confirm recommendations with a qualified agronomist or extension officer.</p>
+        </div>
+
+        <div class="toolbox">
+          <div class="form-grid">
+            <label>
+              Crop
+              <select id="crop">
+                <option>Maize</option>
+                <option>Rice</option>
+                <option>Tomato</option>
+                <option>Cassava</option>
+                <option>Beans</option>
+              </select>
+            </label>
+            <label>
+              Growth Stage
+              <select id="stage">
+                <option>Seedling</option>
+                <option>Vegetative</option>
+                <option>Flowering</option>
+                <option>Fruiting</option>
+                <option>Pre-harvest</option>
+              </select>
+            </label>
+            <label>
+              Soil Condition
+              <select id="soil">
+                <option>Moist</option>
+                <option>Dry</option>
+                <option>Waterlogged</option>
+                <option>Low fertility</option>
+              </select>
+            </label>
+            <label>
+              Main Concern
+              <select id="concern">
+                <option>Yellow leaves</option>
+                <option>Pest pressure</option>
+                <option>Poor growth</option>
+                <option>Low rainfall</option>
+                <option>Disease spots</option>
+              </select>
+            </label>
+          </div>
+          <button class="btn btn-primary" id="advisorBtn" style="margin-top: 16px;">Generate Advice</button>
+          <div class="result" id="advisorResult">
+            <strong>Farm advice ready</strong>
+            Choose your field conditions and generate a practical recommendation.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="disease">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <span class="eyebrow" style="color: var(--green);">Crop Disease Detection</span>
+            <h2>Catch crop disease before it spreads.</h2>
+          </div>
+          <p>Agromindz is designed to help farmers spot visible symptoms early, compare likely causes, and take the right next step before yield is affected.</p>
+        </div>
+
+        <div class="disease-panel">
+          <div class="scan-box" role="img" aria-label="Healthy green farm crop leaves ready for disease scan"></div>
+          <div class="disease-list">
+            <article class="disease-item">
+              <b>01</b>
+              <div>
+                <h3>Upload or capture a leaf image</h3>
+                <p>Farmers can photograph leaves, stems, or fruit damage for AI-assisted symptom review.</p>
+              </div>
+            </article>
+            <article class="disease-item">
+              <b>02</b>
+              <div>
+                <h3>Identify disease patterns</h3>
+                <p>The system checks for spots, yellowing, wilting, mold, blight-like marks, pest injury, and nutrient stress.</p>
+              </div>
+            </article>
+            <article class="disease-item">
+              <b>03</b>
+              <div>
+                <h3>Recommend response actions</h3>
+                <p>Agromindz suggests inspection steps, isolation, watering changes, treatment options, or expert escalation.</p>
+              </div>
+            </article>
+            <article class="disease-item">
+              <b>04</b>
+              <div>
+                <h3>Track recovery</h3>
+                <p>Farmers can record treatment dates, follow-up photos, and crop response to improve future decisions.</p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="advisor" id="forecast">
+      <div class="wrap advisor-layout">
+        <div>
+          <span class="eyebrow">Yield Forecasting</span>
+          <h2>Estimate harvest output before the season ends.</h2>
+          <p>Use field size, crop, rainfall condition, and crop health to estimate yield range and identify what can still improve harvest performance.</p>
+          <div class="metrics">
+            <div class="metric"><strong>3</strong><span>yield scenarios</span></div>
+            <div class="metric"><strong>5</strong><span>major crop types</span></div>
+            <div class="metric"><strong>24/7</strong><span>field planning</span></div>
+            <div class="metric"><strong>1</strong><span>farm dashboard</span></div>
+          </div>
+        </div>
+
+        <div class="toolbox">
+          <div class="form-grid">
+            <label>
+              Crop Type
+              <select id="yieldCrop">
+                <option value="3.2">Maize</option>
+                <option value="4.1">Rice</option>
+                <option value="18">Tomato</option>
+                <option value="12">Cassava</option>
+                <option value="1.4">Beans</option>
+              </select>
+            </label>
+            <label>
+              Field Size (hectares)
+              <input id="fieldSize" type="number" min="0.1" step="0.1" value="2" />
+            </label>
+            <label>
+              Rainfall Condition
+              <select id="rainfall">
+                <option value="1.05">Good</option>
+                <option value="0.9">Average</option>
+                <option value="0.72">Low</option>
+                <option value="0.65">Erratic</option>
+              </select>
+            </label>
+            <label>
+              Crop Health
+              <select id="health">
+                <option value="1.08">Healthy</option>
+                <option value="0.92">Moderate stress</option>
+                <option value="0.72">Disease pressure</option>
+                <option value="0.8">Nutrient stress</option>
+              </select>
+            </label>
+          </div>
+          <button class="btn btn-primary" id="forecastBtn" style="margin-top: 16px;">Measure Forecast</button>
+          <div class="result" id="forecastResult">
+            <strong>Forecast ready</strong>
+            Enter your field details to estimate likely harvest output.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta" id="contact">
+      <div class="wrap">
+        <div class="cta-box">
+          <div>
+            <h2>Bring AI guidance to your farm.</h2>
+            <p>Use Agromindz to advise farmers, detect crop disease, and measure yield forecasts from one simple website.</p>
+          </div>
+          <a class="btn btn-primary" href="mailto:hello@agromindz.com">Contact Agromindz</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap footer-grid">
+      <div>
+        <h3>Agromindz</h3>
+        <p>AI advisor for farmers, crop disease detection, and yield forecasting.</p>
+      </div>
+      <div>
+        <h4>Tools</h4>
+        <div class="footer-links">
+          <a href="#advisor">Farm Advisor</a>
+          <a href="#disease">Disease Detection</a>
+          <a href="#forecast">Yield Forecasting</a>
+        </div>
+      </div>
+      <div>
+        <h4>Services</h4>
+        <div class="footer-links">
+          <a href="#services">Product Features</a>
+          <a href="#services">Weather Planning</a>
+          <a href="#services">Farm Records</a>
+        </div>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <div class="footer-links">
+          <a href="mailto:hello@agromindz.com">hello@agromindz.com</a>
+          <a href="privacy-policy.html">Privacy Policy</a>
+          <a href="terms-and-conditions.html">Terms and Conditions</a>
+          <span>Farm intelligence platform</span>
+        </div>
+      </div>
+      <div class="copyright">&copy; 2026 Agromindz. All rights reserved.</div>
+    </div>
+  </footer>
+
+  <script>
+    const advisorBtn = document.getElementById("advisorBtn");
+    const advisorResult = document.getElementById("advisorResult");
+    const forecastBtn = document.getElementById("forecastBtn");
+    const forecastResult = document.getElementById("forecastResult");
+
+    advisorBtn.addEventListener("click", () => {
+      const crop = document.getElementById("crop").value;
+      const stage = document.getElementById("stage").value;
+      const soil = document.getElementById("soil").value;
+      const concern = document.getElementById("concern").value;
+
+      const soilAdvice = {
+        Moist: "Maintain current moisture and avoid overwatering.",
+        Dry: "Irrigate early morning or evening and apply mulch where possible.",
+        Waterlogged: "Improve drainage and delay fertilizer until roots recover.",
+        "Low fertility": "Apply compost or balanced fertilizer based on local soil guidance."
+      };
+
+      advisorResult.innerHTML = `
+        <strong>${crop} advisory for ${stage.toLowerCase()} stage</strong>
+        Main concern: ${concern}. ${soilAdvice[soil]} Inspect the field in 3 to 5 days, record changes, and escalate to an agronomist if symptoms spread.
+      `;
+    });
+
+    forecastBtn.addEventListener("click", () => {
+      const cropSelect = document.getElementById("yieldCrop");
+      const cropName = cropSelect.options[cropSelect.selectedIndex].text;
+      const baseYield = Number(cropSelect.value);
+      const fieldSize = Math.max(Number(document.getElementById("fieldSize").value) || 0, 0);
+      const rainfall = Number(document.getElementById("rainfall").value);
+      const health = Number(document.getElementById("health").value);
+      const forecast = baseYield * fieldSize * rainfall * health;
+      const low = forecast * 0.88;
+      const high = forecast * 1.12;
+
+      forecastResult.innerHTML = `
+        <strong>${forecast.toFixed(1)} tonnes expected</strong>
+        ${cropName} forecast range: ${low.toFixed(1)} to ${high.toFixed(1)} tonnes. Better disease control, timely irrigation, and nutrient correction can improve the final result.
+      `;
+    });
+  </script>
+</body>
+</html>
